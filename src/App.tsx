@@ -4,41 +4,60 @@ import calculateMininalPrice from './helpers/calculateMinimalPrice';
 import { useState } from 'react';
 
 function App() {
-  const [costprice, setCostprice] = useState(0);
-  const [price, setPrice] = useState(0);
-  const [deduction, setDeduction] = useState(0.52);
-  const [commission, setCommission] = useState(13.1);
-  const [tax, setTax] = useState(24);
+  const [costprice, setCostprice] = useState <(number | '')>(0);
+  const [price, setPrice] = useState <number | ''>(0);
+  const [deduction, setDeduction] = useState <number | ''> (0.52);
+  const [commission, setCommission] = useState <number | ''>(13.1);
+  const [tax, setTax] = useState <number | ''>(24);
 
   const [netProfit, setNetProfit] = useState('');
   const [minimalPrice, setMinimalPrice] = useState('');
   const [isCalculated, setIsCalculated] = useState(false);
 
+  const handleCostpriceChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.value === '') {
+      setCostprice('');
+    } else {
+    setCostprice(Number(e.target.value));
+    }
+  };
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.value === '') {
+      setPrice('');
+    } else {
     setPrice(Number(e.target.value));
+    }
   }
 
-  const handleCostpriceChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setCostprice(Number(e.target.value));
-  };
-
   const handleDeductionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.value === '') {
+      setDeduction('');
+    } else {
     setDeduction(Number(e.target.value));
-  };
+    }  };
 
   const handleCommisionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.value === '') {
+      setCommission('');
+    } else {
     setCommission(Number(e.target.value));
+    }
   };
 
   const handleTaxChange = (e: any) => {
-    setTax(e.target.value);
+    if (e.target.value === '') {
+      setTax('');
+    } else {
+    setTax(Number(e.target.value));
+    }
   };
 
   const handleUserProfitCalculatorSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (price !== 0) {
-      const netProfitCalculationResult = calculateNetProfit(costprice, price, deduction, commission, tax);
-      const minimalPriceCalculationResult = calculateMininalPrice(costprice, deduction, commission, tax);
+    if (price !== 0 && price !== '') {
+      const netProfitCalculationResult = calculateNetProfit(Number(costprice), Number(price), Number(deduction), Number(commission), Number(tax));
+      const minimalPriceCalculationResult = calculateMininalPrice(Number(costprice), Number(deduction), Number(commission), Number(tax));
       setNetProfit(netProfitCalculationResult);
       setMinimalPrice(minimalPriceCalculationResult);
       setIsCalculated(true);
@@ -51,23 +70,23 @@ function App() {
       <form onSubmit={(e) => handleUserProfitCalculatorSubmit(e)} className='profitCalculator__form'>
         <div className='profitCalculator__formgroup'>
           <label className='profitCalculator__label' htmlFor='costprice'>Себестоимость</label>
-          <input onChange={(e) => handleCostpriceChange(e)} type='number' value={costprice} step='0.1' id='costprice' className='profitCalculator__input'></input>
+          <input name='costprice' onChange={(e) => handleCostpriceChange(e)} type='number' value={costprice} step='0.1' id='costprice' className='profitCalculator__input'></input>
         </div>
         <div className='profitCalculator__formgroup'>
           <label className='profitCalculator__label' htmlFor='price'>Цена</label>
-          <input onChange={(e) => handlePriceChange(e)} type='number' value={price} step='0.1' id='price' className='profitCalculator__input'></input>
+          <input name='price' onChange={(e) => handlePriceChange(e)} type='number' value={price} step='0.1' id='price' className='profitCalculator__input'></input>
         </div>
         <div className='profitCalculator__formgroup'>
           <label className='profitCalculator__label' htmlFor='deduction'>Вычет</label>
-          <input onChange={(e) => handleDeductionChange(e)} type='number' value={deduction} step='0.1' id='deduction' className='profitCalculator__input'></input>
+          <input name='deduction' onChange={(e) => handleDeductionChange(e)} type='number' value={deduction} step='0.1' id='deduction' className='profitCalculator__input'></input>
         </div>
         <div className='profitCalculator__formgroup'>
-          <label className='profitCalculator__label' htmlFor='commision'>Комиссия сайта</label>
-          <input onChange={(e) => handleCommisionChange(e)} type='number' value={commission} step='0.1' id='comission' className='profitCalculator__input'></input>
+          <label className='profitCalculator__label' htmlFor='commission'>Комиссия сайта</label>
+          <input name='commission' onChange={(e) => handleCommisionChange(e)} type='number' value={commission} step='0.1' id='commission' className='profitCalculator__input'></input>
         </div>
         <div className='profitCalculator__formgroup'>
           <label className='profitCalculator__label' htmlFor='tax'>Налог с прибыли</label>
-          <input onChange={(e) => handleTaxChange(e)} type='number' value={tax} step='0.1' id='tax' className='profitCalculator__input'></input>
+          <input name='tax' onChange={(e) => handleTaxChange(e)} type='number' value={tax} step='0.1' id='tax' className='profitCalculator__input'></input>
         </div>
         <button type='submit'>Рассчитать</button>
       </form>
@@ -78,7 +97,6 @@ function App() {
         <h4 className='profitCalculator__heading_small'>Выход в ноль при цене: {minimalPrice}€</h4>
       </div>
       }
-      
     </div>
   )
 }
